@@ -1,11 +1,10 @@
-
+package Practice;
 // 맨 끝 숫자는 0이여야함.
 // 각 자리 수의 합이 3으로 나누어 떨어져야 한다 ***
 // 반ㄷ시 0이 있어야한다.
 // ex) 562 = 5 + 6 + 2 13 이건안되네
 // ex) 5073 = 5 + 0 + 7 + 3 = 15 and 0도 있음.
 
-package BaekJoon;
 import java.util.*;
 public class Que10610 {
     public static final int Max = 100000;

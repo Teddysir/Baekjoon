@@ -1,4 +1,4 @@
-package BaekJoon;
+package Practice;
 
 import java.util.*;
 public class Que2875 {
