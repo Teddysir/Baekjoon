@@ -21,7 +21,7 @@ public class Main {
             res = (res*31)%1234567891;
         }
 
-        System.out.println(sum);
+        System.out.println(sum%1234567891);
 
 
     }
