@@ -36,17 +36,16 @@ public class Main {
         }
 
         public static int answer(int point) {
-            int count = 0;
+            int count =  0;
 
             while (!queue.isEmpty()) {
-
                 int[] first = queue.poll();
                 boolean isMax = true;
 
-                for(int i = 0 ; i < queue.size(); i++ ) {
-                    if (first[1] < queue.get(i)[1]) {
-
+                for(int i = 0; i< queue.size(); i++ ) {
+                    if(first[1] < queue.get(i)[1]){
                         queue.offer(first);
+
                         for(int j = 0; j < i; j++) {
                             queue.offer(queue.poll());
                         }
@@ -60,6 +59,7 @@ public class Main {
                     continue;
                 }
                 count++;
+
                 if(first[0] == point) {
                     break;
                 }
