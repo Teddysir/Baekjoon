@@ -85,9 +85,10 @@ public class Main {
     }
 
     static int answer4(int[] numList) {
-        Arrays.sort(numList);
+            int first = numList[0];
+            int last = numList[numList.length - 1];
 
-        return Math.abs(numList[numList.length-1] - numList[0]);
+            return Math.abs(last - first);
 
     }
 
