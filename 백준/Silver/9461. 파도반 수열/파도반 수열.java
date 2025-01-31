@@ -9,6 +9,7 @@ public class Main {
 
         int T = Integer.parseInt(br.readLine());
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < T; i++) {
             int num = Integer.parseInt(br.readLine());
             long[] arr = new long[num + 1];
@@ -22,8 +23,10 @@ public class Main {
                 }
             }
 
-            System.out.println(arr[num]);
+            sb.append(arr[num]).append("\n");
         }
+
+        System.out.println(sb);
 
 
     }
