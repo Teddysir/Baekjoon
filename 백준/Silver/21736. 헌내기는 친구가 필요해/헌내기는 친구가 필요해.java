@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -16,6 +18,7 @@ public class Main {
     static int X;
     static int Y;
     static int count;
+    static Queue<int[]> q = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
 
@@ -40,7 +43,7 @@ public class Main {
             }
         }
 
-        DFS(X, Y);
+        BFS(X, Y);
 
         if (count == 0) {
             System.out.println("TT");
@@ -49,6 +52,35 @@ public class Main {
         }
 
 
+    }
+
+    static void BFS(int X, int Y) {
+        q.offer(new int[]{X, Y});
+        check[X][Y] = true;
+
+        while (!q.isEmpty()) {
+
+            int[] curQ = q.poll();
+            int cx = curQ[0];
+            int cy = curQ[1];
+
+            for (int i = 0; i < 4; i++) {
+                int nx = cx + dx[i];
+                int ny = cy + dy[i];
+
+                if (nx >= 0 && ny >= 0 && nx < N && ny < M && !check[nx][ny]) {
+                    if(campus[nx][ny] != 'X') {
+                        q.offer(new int[]{nx, ny});
+                        check[nx][ny] = true;
+                        if(campus[nx][ny] == 'P') {
+                            count++;
+                        }
+                    }
+                }
+
+            }
+
+        }
     }
 
     static void DFS(int X, int Y) {
