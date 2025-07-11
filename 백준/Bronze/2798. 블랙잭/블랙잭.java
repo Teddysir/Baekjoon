@@ -1,50 +1,54 @@
+
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+class Main {
+	static int N, M;
+	static int max;
+	static int[] arr;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int[] arr = new int[N];
-        st = new StringTokenizer(br.readLine(), " ");
-        for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
-        }
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken()); // 원하는 값,
 
-        int result = search(arr, N, M);
-        System.out.println(result);
+		st = new StringTokenizer(br.readLine());
 
-    }
+		arr = new int[N];
 
-    static int search(int[] arr, int n, int m) {
-        int result = 0;
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
 
-        for (int i = 0; i < n - 2; i++) {
+		max = 0;
 
-            for (int j = i+1; j < n - 1; j++) {
+		for (int i = 0; i < N; i++) {
+			for (int j = i + 1; j < N; j++) {
+				for (int k = j + 1; k < N; k++) {
+					solution(arr[i], arr[j], arr[k]);
+				}
+			}
+		}
 
-                for (int k = j+1; k < n; k++) {
-                    int temp = arr[i] + arr[j] + arr[k];
+		System.out.println(max);
 
-                    if (m == temp) {
-                        return temp;
-                    }
+	}
 
-                    if (result < temp && temp < m) {
-                        result = temp;
-                    }
+	static void solution(int x, int y, int z) {
+		int num = x + y + z;
 
-                }
-            }
-        }
 
-        return result;
-    }
+		if (num <= M) {
+			max = Math.max(max, num);
+		}
+
+	}
+
 }
