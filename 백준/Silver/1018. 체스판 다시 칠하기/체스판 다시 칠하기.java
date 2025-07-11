@@ -1,70 +1,65 @@
-import java.io.*;
-import java.util.*;
 
-public class Main {
-    public static boolean[][] arr;
-    public static int min = 64;
-    public static int N;
-    public static int M;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-    public static void main(String[] args) throws IOException {
+class Main {
+	static int N, M;
+	static int count;
+	static char[][] arr;
+	static int min = Integer.MAX_VALUE;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        arr = new boolean[N][M];
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < N; i++) {
-            String str = br.readLine();
-            for (int j = 0; j < M; j++) {
-                if (str.charAt(j) == 'W') {
-                    arr[i][j] = true;
-                } else {
-                    arr[i][j] = false;
-                }
-            }
-        }
+		arr = new char[N][M];
 
-        int row = N - 7;
-        int col = M - 7;
+		for (int i = 0; i < N; i++) {
+			String temp = br.readLine();
+			for (int j = 0; j < M; j++) {
+				arr[i][j] = temp.charAt(j);
+			}
+		}
 
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                solution(i, j);
-            }
-        }
+		for (int i = 0; i < N - 7; i++) {
+			for (int j = 0; j < M - 7; j++) {
+				wsolution(i, j);
+			}
+		}
 
-        System.out.println(min);
+		System.out.println(min);
 
-    }
+	}
 
-    public static void solution(int x, int y) {
+	static void wsolution(int row, int col) {
 
-        int endX = x + 8;
-        int endY = y + 8;
-        int count = 0;
-
-        boolean TF = arr[x][y];
-
-        for (int i = x; i < endX; i++) {
-            for (int j = y; j < endY; j++) {
-                if (arr[i][j] != TF) {
-                    count++;
-                }
-                TF = (!TF);
-            }
-            TF = !TF;
-        }
-
-
-        count = Math.min(count, 64 - count);
-
-        min = Math.min(min, count);
-
-    }
+		int wCount = 0;
+		int bCount = 0;
+		for (int i = row; i < row + 8; i++) {
+			for (int j = col; j < col + 8; j++) {
+				if ((i + j) % 2 == 0) {
+					
+					if(arr[i][j] == 'W') wCount++;
+					if(arr[i][j] == 'B') bCount++;
+					
+					
+					
+				} else {
+					
+					if(arr[i][j] == 'B') wCount++;
+					if(arr[i][j] == 'W') bCount++;
+					
+				}
+			}
+		}
+		
+		min = Math.min(min, Math.min(wCount, bCount));
+	}
 
 }
-
