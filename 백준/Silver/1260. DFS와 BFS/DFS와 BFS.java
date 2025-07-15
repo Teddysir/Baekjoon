@@ -1,80 +1,82 @@
-import java.io.*;
-import java.util.*;
 
-public class Main {
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
-    static boolean[] check;
-    static int[][] arr;
-    static int count; // 노드 갯수랑 같으면 정지시킬 카운트
-    static int node;
-    static int line;
-    static int start;
+class Main {
+	static int node, line, start;
+	static int[][] arr;
+	static boolean[] check;
+	static StringBuilder sb = new StringBuilder();
 
-    static Queue<Integer> q = new LinkedList<>();
+	
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String args[]) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		node = Integer.parseInt(st.nextToken());
+		line = Integer.parseInt(st.nextToken());
+		start = Integer.parseInt(st.nextToken());
 
-        node = Integer.parseInt(st.nextToken());
-        line = Integer.parseInt(st.nextToken());
-        start = Integer.parseInt(st.nextToken());
+		arr = new int[node + 1][node + 1];
+		check = new boolean[node + 1];
 
-        arr = new int[node + 1][node + 1];
-        check = new boolean[node + 1];
+		for (int i = 0; i < line; i++) {
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < line; i++) {
-            st = new StringTokenizer(br.readLine());
+			arr[a][b] = arr[b][a] = 1;
 
-            int num1 = Integer.parseInt(st.nextToken());
-            int num2 = Integer.parseInt(st.nextToken());
+		}
+		
+		dfs(start);
+		sb.append("\n");
+		
+		check = new boolean[node+1];
+		
+		bfs(start);
+		
+		System.out.println(sb);
 
-            arr[num1][num2] = arr[num2][num1] = 1;
-        }
+	}
+	
+	static void dfs(int start) {
+		check[start] = true;
+		sb.append(start).append(" ");
+		
+		for(int i = 1;  i <= node; i++) {
+			if(!check[i] && arr[start][i] == 1) {
+				dfs(i);
+			}
+		}
+		
+	}
+	
+	static void bfs(int start) {
+		
+		Queue<Integer> q = new LinkedList<>();
+		
+		q.add(start);
+		check[start] = true;
+		
+		while(!q.isEmpty()) {
+			
+			int temp = q.poll();
+			sb.append(temp).append(" ");
+			
+			for(int i = 1; i <= node ; i++ ) {
+				if(arr[temp][i] == 1 && !check[i]) {
+					check[i] = true;
+					q.add(i);
+				}
+			}
+		}
+		
+	}
 
-        DFS(start);
-        System.out.println();
-
-        check = new boolean[node + 1];
-        BFS(start);
-    }
-
-    static void BFS(int start) {
-        q.offer(start); // start node 넣기
-        check[start] = true; // 방문 체크
-
-        System.out.print(start + " "); // 출력
-
-        while (!q.isEmpty()) {
-            start = q.poll();
-
-            for (int i = 1; i <= node; i++) {
-                if (arr[start][i] == 1 && !check[i]) {
-                    q.offer(i);
-                    check[i] = true;
-                    System.out.print(i + " ");
-                }
-            }
-        }
-
-    }
-
-    static void DFS(int start) {
-        check[start] = true;
-        System.out.print(start + " ");
-
-        if (count == node) {
-            return;
-        }
-
-        count++;
-
-        for (int i = 1; i <= node; i++) {
-            if (arr[start][i] == 1 && !check[i]) {
-                DFS(i);
-            }
-        }
-    }
 }
-
