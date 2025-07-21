@@ -1,51 +1,46 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-class Solution {
+public class Solution {
 
-    public static void main(String[] args) throws Exception {
+	static int apt, count;
+	static int[] heights;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws Exception {
 
-        StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        for (int test_case = 1; test_case <= 10; test_case++) {
+		for (int test_case = 1; test_case <= 10; test_case++) {
+			count = 0;
 
-            int N = Integer.parseInt(br.readLine());
+			apt = Integer.parseInt(br.readLine()); // 아파트 수
+			heights = new int[apt];
 
-            int[] arr = new int[N];
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < apt; i++) {
+				heights[i] = Integer.parseInt(st.nextToken());
+			}
 
-            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-            for (int i = 0; i < N; i++) {
-                arr[i] = Integer.parseInt(st.nextToken());
-            }
-            int count = 0;
+			for (int i = 2; i < apt - 2; i++) {
+				int tempLeft_step_1 = heights[i] - heights[i - 1];
+				int tempLeft_step_2 = heights[i] - heights[i - 2];
+				int temp_left = Math.min(tempLeft_step_1, tempLeft_step_2);
 
-            for (int i = 2; i < N - 2; i++) {
-                int maxLeft;
-                int maxRight;
+				int tempRight_step1 = heights[i] - heights[i + 1];
+				int tempRight_step2 = heights[i] - heights[i + 2];
+				int temp_right = Math.min(tempRight_step1, tempRight_step2);
 
-                int value_1 = arr[i] - arr[i - 2];
-                int value_2 = arr[i] - arr[i - 1];
-                maxLeft = Math.min(value_1, value_2);
+				if (temp_left > 0 && temp_right > 0) {
+					count += Math.min(temp_left, temp_right);
+				}
 
-                int plus_value_1 = arr[i] - arr[i + 1];
-                int plus_value_2 = arr[i] - arr[i + 2];
-                maxRight = Math.min(plus_value_1, plus_value_2);
+			}
 
-                if (maxLeft > 0 && maxRight > 0) {
-                    count += Math.min(maxLeft, maxRight);
-                }
-            }
+			sb.append("#").append(test_case).append(" ").append(count).append("\n");
 
+		}
+		System.out.println(sb);
 
-            sb.append("#").append(test_case).append(" ").append(count).append("\n");
-
-        }
-        System.out.println(sb);
-
-
-    }
+	}
 }
-
