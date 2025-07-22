@@ -23,9 +23,9 @@ public class Solution {
 			ans = 0;
 			map = new HashMap<Integer, int[]>();
 			arr = new int[total_bag + 1][max_volume + 1];
-			for (int i = 0; i <= total_bag; i++) {
-				Arrays.fill(arr[i], -1);
-			}
+//			for (int i = 0; i <= total_bag; i++) {
+//				Arrays.fill(arr[i], -1);
+//			}
 
 			for (int i = 0; i < total_bag; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -45,25 +45,22 @@ public class Solution {
 
 	static int dp(int count, int volume) {
 
-		if (arr[count][volume] != -1) { // 있으면 메모이제이션 
-			return arr[count][volume];
+		if(arr[count][volume] != 0) {
+			return arr[count][volume]; // 이미 있는거면 계산할 필요 없다.
 		}
-
-		if (count == total_bag) {
-			return 0; // 넘칠떄 
-		}
-
-		int result = dp(count + 1, volume); //  걍 넘어가고?
-		int[] temp = map.get(count); // 뽑구 
 		
-		if(volume + temp[0] <= max_volume) { // 안넘치면 
-			result = Math.max(result, dp(count+1, volume + temp[0]) + temp[1]); //걍넘은 값 vs 기존 볼륨 + 새로운 볼륨 + 새로운 가
+		if(count == total_bag) {
+			return 0; // 마지막은 끗 
+		}
+		
+		int result = dp(count+1, volume); // -> 그냥 넘어갈때,
+		int[] temp = map.get(count);
+		if(volume + temp[0] <= max_volume) { // 안넘으면 
+			result = Math.max(result, dp(count+1, volume + temp[0]) + temp[1]);
 		}
 		
 		arr[count][volume] = result;
-		
 		return result;
-
 	}
 
 }
