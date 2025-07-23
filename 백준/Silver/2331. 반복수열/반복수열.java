@@ -1,43 +1,54 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
+import java.io.*;
 
-public class Main {
+class Main {
 
-    static List<Integer> arr;
+	static int A, P, temp;
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String args[]) throws Exception {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        int num = Integer.parseInt(st.nextToken()); // 입력받은 수
-        int square = Integer.parseInt(st.nextToken()); //
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-        arr = new ArrayList<>();
-        arr.add(num);
+		A = Integer.parseInt(st.nextToken());
+		P = Integer.parseInt(st.nextToken());
 
-        while (true) {
-            int temp = arr.get(arr.size() - 1);
-            int result = nextNode(temp, square);
+		List<Integer> list = new LinkedList<>();
+		Set<Integer> set = new HashSet<>();
 
-            if(arr.contains(result)) {
-                System.out.println(arr.indexOf(result));
-                break;
-            }
+		temp = 0;
+		String parse_num = String.valueOf(A); // 문자열 57
+		String temp_str = "0";
 
-            arr.add(result);
-        }
+		list.add(A);
+		set.add(A);
 
-    }
+		while (Integer.parseInt(temp_str) != A) {
 
-    static int nextNode(int num, int square) {
-        int sum = 0;
-        while (num > 0) {
-            int digit = num % 10;
-            sum += (int) Math.pow(digit, square);
-            num /= 10;
-        }
-        return sum;
-    }
+			for (int i = 0; i < parse_num.length(); i++) {
+				int tempNum = parse_num.charAt(i) - 48;
+				temp += Math.pow(tempNum, P);
+			}
+
+			list.add(temp);
+			set.add(temp);
+
+			if (list.size() != set.size()) {
+				sb.append(list.indexOf(temp));
+				break;
+			}
+
+			parse_num = String.valueOf(temp); // 그러면 parsenum == 문자열 74
+			temp_str = parse_num;
+			temp = 0;
+
+		}
+
+		System.out.println(sb);
+
+	}
 
 }
