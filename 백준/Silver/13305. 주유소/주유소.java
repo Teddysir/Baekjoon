@@ -25,9 +25,9 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			oil_money[i] = Integer.parseInt(st.nextToken());
 		}
-		int totalMoney = 0;
+		long totalMoney = 0;
 
-		int temp = oil_money[0];
+		long temp = oil_money[0];
 
 		for (int j = 0; j < N - 1; j++) {
 			if (temp > oil_money[j]) {
