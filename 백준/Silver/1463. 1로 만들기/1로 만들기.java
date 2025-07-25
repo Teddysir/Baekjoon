@@ -1,58 +1,28 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-	static int N, count;
-	static int[] arr = new int[1000001];
+        int[] dp = new int[n + 1];
+        dp[1] = 0; // 여기서 맞틀 갈림
 
-	public static void main(String args[]) throws Exception {
+        for (int i = 2; i <= n; i++) {
+            
+            if((i% 6) == 0) 
+                dp[i] = Math.min(dp[i/6] + 1 , dp[i]);
+            
+            dp[i] = dp[i - 1] + 1;
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+            if ((i % 3) == 0)
+                dp[i] = Math.min(dp[i / 3] + 1, dp[i]);
+            if ((i % 2) == 0)
+                dp[i] = Math.min(dp[i / 2] + 1, dp[i]);
+        }
 
-		N = Integer.parseInt(br.readLine());
-
-		count = 0;
-
-		Arrays.fill(arr, -1);
-		arr[0] = arr[1] = 0;
-		dp(N);
-
-		System.out.println(arr[N]);
-
-	}
-
-	static int dp(int num) {
-//		System.out.println(num);
-//
-		if (arr[num] != -1) {
-			return arr[num];
-		}
-
-		if (num == 1) {
-			return arr[num] = 0;
-		}
-
-		// -1, %3, %2
-//		int result = num;
-		if (num % 6 == 0) {
-			arr[num] = Math.min(dp(num / 3) + 1, dp(num / 2) + 1);
-		}
-
-		arr[num] = dp(num - 1) + 1;
-		if (num % 3 == 0) {
-//			System.out.println("1 --- ");
-			arr[num] = Math.min(arr[num], dp(num / 3) + 1);
-
-		}
-		if (num % 2 == 0) {
-//			System.out.println("2 --- ");
-			arr[num] = Math.min(arr[num], dp(num / 2) + 1);
-
-		}
-
-		return arr[num];
-	}
-
+        System.out.println(dp[n]);
+    }
 }
