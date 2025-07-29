@@ -1,45 +1,46 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 
 	static int N, M;
-	static boolean[] used;
 	static int[] arr;
+	static boolean[] visited;
+	
 
-	public static void main(String args[]) throws Exception {
-
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		used = new boolean[N + 1];
-		arr = new int[M];
+		arr = new int[N];
+		visited = new boolean[N+1];
 
-		backTrack(0);
+		backTracking(0);
 
 	}
 
-	static void backTrack(int dep) {
-		StringBuilder tempSb = new StringBuilder();
+	static void backTracking(int depth) {
+		
+		StringBuilder sb = new StringBuilder();
 
-		if (dep == M) {
+		if (depth == M) {
 			for (int i = 0; i < M; i++) {
-				tempSb.append(arr[i]).append(" ");
+				sb.append(arr[i]).append(" ");
 			}
-			System.out.println(tempSb);
+			System.out.println(sb);
 			return;
 		}
-		
 
 		for (int i = 1; i <= N; i++) {
-			if (!used[i]) {
-				used[i] = true;
-				arr[dep] = i;
-				backTrack(dep + 1);
-				used[i] = false;
+			if (!visited[i]) {
+				visited[i] = true;
+				arr[depth] = i;
+				backTracking(depth + 1);
+
+				visited[i] = false;
 			}
 		}
 	}
