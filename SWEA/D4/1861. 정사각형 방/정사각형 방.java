@@ -5,6 +5,7 @@ public class Solution {
 
 	static int T, size, maxX, maxY, max, tempMax;
 	static int[][] map;
+	static boolean[][] visited;
 	static int[] dx = { 1, -1, 0, 0 };
 	static int[] dy = { 0, 0, 1, -1 };
 
@@ -19,7 +20,6 @@ public class Solution {
 			size = Integer.parseInt(br.readLine());
 
 			map = new int[size][size];
-//			visited = new boolean[size][size];
 
 			for (int i = 0; i < size; i++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
@@ -28,14 +28,12 @@ public class Solution {
 				}
 			}
 			tempMax = 0;
-			int tempPonintX = 0;
-			int tempPointY = 0;
-			int tempPoint = 0;
 			max = 0;
 			maxX = 0;
 			maxY = 0;
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
+					visited = new boolean[size][size];
 					tempMax = bfs(i, j);
 					if (tempMax == max) {
 						if (map[i][j] < map[maxX][maxY]) {
@@ -60,6 +58,7 @@ public class Solution {
 	static int bfs(int x, int y) {
 		Queue<int[]> q = new LinkedList<>();
 		q.add(new int[] { x, y });
+		visited[x][y] = true;
 		int count = 1;
 
 		while (!q.isEmpty()) {
@@ -69,9 +68,10 @@ public class Solution {
 				int nx = temp[0] + dx[i];
 				int ny = temp[1] + dy[i];
 
-				if (nx >= 0 && ny >= 0 && nx < size && ny < size) {
+				if (nx >= 0 && ny >= 0 && nx < size && ny < size && !visited[nx][ny]) {
 					if (map[nx][ny] - 1 == map[nx - dx[i]][ny - dy[i]]) {
 						count++;
+						visited[nx][ny] = true;
 						q.add(new int[] { nx, ny });
 					}
 				}
