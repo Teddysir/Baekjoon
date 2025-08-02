@@ -30,12 +30,12 @@ public class Solution {
 				int b = Integer.parseInt(st.nextToken());
 
 				friends[a][b] = friends[b][a] = 1;
-
 			}
 
 			for (int i = 1; i <= N; i++) {
 				if (!visited[i]) {
-					ans += dfs(i);
+					dfs(i);
+					ans++;
 				}
 			}
 
@@ -47,18 +47,14 @@ public class Solution {
 
 	}
 
-	static int dfs(int start) {
-
+	static void dfs(int start) {
 		visited[start] = true;
 		for (int i = 1; i <= N; i++) {
 			if (friends[start][i] == 1 && !visited[i]) {
 				visited[i] = true;
 				dfs(i);
-
 			}
-
 		}
-		return 1;
 	}
 
 }
