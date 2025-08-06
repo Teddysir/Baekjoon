@@ -39,7 +39,6 @@ public class Solution {
 
 		}
 		System.out.println(sb);
-	
 
 	}
 
@@ -55,9 +54,6 @@ public class Solution {
 			int tempRow = temp[0];
 			int tempCol = temp[1];
 
-
-			visited[tempRow][tempCol] = true;
-
 			if (tempRow == 0) {
 				answer = tempCol;
 			}
@@ -72,6 +68,7 @@ public class Solution {
 				continue;
 			} else {
 				if (tempRow > 0) {
+					visited[tempRow - 1][tempCol] = true;
 					q.add(new int[] { tempRow - 1, tempCol });
 				}
 			}
