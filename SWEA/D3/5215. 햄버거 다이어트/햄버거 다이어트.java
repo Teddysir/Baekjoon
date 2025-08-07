@@ -1,60 +1,60 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-class Solution {
+public class Solution {
 
-    static int[] foodPoint, calories;
-    static int count, caloriesLimit, max;
+	static int burger, limit_calories, TC, ans;
+	static int[] tastes;
+	static int[] calories;
 
-    public static void main(String[] args) throws Exception {
+	public static void main(String args[]) throws Exception {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		TC = Integer.parseInt(br.readLine());
 
-        StringBuilder sb = new StringBuilder();
+		for (int k = 1; k <= TC; k++) {
 
-        int I = Integer.parseInt(br.readLine());
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			burger = Integer.parseInt(st.nextToken());
+			limit_calories = Integer.parseInt(st.nextToken());
 
-        for (int test_case = 1; test_case <= I; test_case++) {
+			ans = 0;
+			tastes = new int[burger];
+			calories = new int[burger];
+		
+			for (int i = 0; i < burger; i++) {
+				st = new StringTokenizer(br.readLine());
 
-            StringTokenizer st = new StringTokenizer(br.readLine());
+				int taste = Integer.parseInt(st.nextToken());
+				int calorie = Integer.parseInt(st.nextToken());
 
-            count = Integer.parseInt(st.nextToken()); // 재료수
-            caloriesLimit = Integer.parseInt(st.nextToken()); // 칼로리 제한
+				tastes[i] = taste;
+				calories[i] = calorie;
 
-            foodPoint = new int[count];
-            calories = new int[count];
+			}
+			dp(0, 0, 0);
 
-            for (int i = 0; i < count; i++) {
-                st = new StringTokenizer(br.readLine());
-                foodPoint[i] = Integer.parseInt(st.nextToken());
-                calories[i] = Integer.parseInt(st.nextToken());
-            }
+			sb.append("#").append(k).append(" ").append(ans).append("\n");
+		}
 
-            max = 0;
-            DFS(0, 0, 0);
+		System.out.println(sb);
+	}
 
-            sb.append("#").append(test_case).append(" ").append(max).append("\n");
+	static void dp(int cnt, int score, int calorie) {
 
-        }
-        System.out.println(sb);
+		if (limit_calories < calorie) {
+			return;
+		}
+		if (cnt == burger) {
+			ans = Math.max(ans, score);
+			return;
+		}
 
-    }
+		dp(cnt + 1, score + tastes[cnt], + calorie + calories[cnt]);
+		
+		dp(cnt +1, score, calorie);
 
-    static void DFS(int idx, int totalScore, int totalCal) {
+	}
 
-        if (totalCal > caloriesLimit) {
-            return;
-        }
-
-        if (idx == count) {
-            max = Math.max(totalScore, max);
-            return;
-        }
-
-        DFS(idx + 1, totalScore + foodPoint[idx], totalCal + calories[idx]);
-
-        DFS(idx + 1, totalScore, totalCal);
-
-    }
 }
