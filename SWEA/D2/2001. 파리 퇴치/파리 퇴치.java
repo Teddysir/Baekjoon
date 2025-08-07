@@ -1,58 +1,71 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-class Solution {
+public class Solution {
 
-    static int N, M;
-    static int[][] map;
+	static int N, M, TC, ans;
+	static int[][] map;
+	static boolean[][] visited;
 
-    public static void main(String[] args) throws Exception {
+	static int[] dx = { 1, -1, 0, 0 };
+	static int[] dy = { 0, 0, 1, -1 };
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
+	public static void main(String args[]) throws Exception {
 
-        StringBuilder sb = new StringBuilder();
-        for (int test_case = 1; test_case <= T; test_case++) {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		TC = Integer.parseInt(br.readLine());
 
-            StringTokenizer st = new StringTokenizer(br.readLine());
+		for (int k = 1; k <= TC; k++) {
+			ans = 0;
 
-            N = Integer.parseInt(st.nextToken()); // 전체 칸
-            map = new int[N][N]; // 맵
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken());
+			M = Integer.parseInt(st.nextToken());
 
-            M = Integer.parseInt(st.nextToken()); // 잡을 칸
+			map = new int[N][N];
 
-            for (int i = 0; i < N; i++) {
-                st = new StringTokenizer(br.readLine());
-                for (int j = 0; j < N; j++) {
-                    map[i][j] = Integer.parseInt(st.nextToken());
-                }
-            }
+			for (int i = 0; i < N; i++) {
+				st = new StringTokenizer(br.readLine());
+				for (int j = 0; j < N; j++) {
+					map[i][j] = Integer.parseInt(st.nextToken());
+				}
+			}
 
-            int max = 0;
+			for (int i = 0; i < N - M + 1; i++) {
+				for (int j = 0; j < N - M + 1; j++) {
+					visited = new boolean[N][N];
+					ans = Math.max(ans, bfs(i, j));
+				}
+			}
 
-            for (int i = 0; i <= N - M; i++) {
-                for (int j = 0; j <= N - M; j++) {
-                    int count = 0;
-                    for (int k = i; k < i + M; k++) {
-                        for (int l = j; l < j + M; l++) {
-                            count += map[k][l];
-                        }
-                    }
-                    if (count > max) {
-                        max = count;
-                    }
-                }
-            }
+			sb.append("#").append(k).append(" ").append(ans).append("\n");
+		}
 
+		System.out.println(sb);
+	}
 
-            sb.append("#").append(test_case).append(" ").append(max).append("\n");
+	static int bfs(int x, int y) {
+		Queue<int[]> q = new LinkedList<int[]>();
+		q.add(new int[] { x, y });
+		visited[x][y] = true;
+		int tempAns = map[x][y];
+		while (!q.isEmpty()) {
+			int[] temp = q.poll();
 
+			for (int i = 0; i < 4; i++) {
+				int nx = temp[0] + dx[i];
+				int ny = temp[1] + dy[i];
 
-        }
+				if (nx >= x && ny >= y && nx < x + M  && ny < y + M  && !visited[nx][ny]) {
+					tempAns += map[nx][ny];
+					visited[nx][ny] = true;
+					q.add(new int[] { nx, ny });
+				}
+			}
+		}
 
-        System.out.println(sb);
-    }
-
+		return tempAns;
+	}
 
 }
