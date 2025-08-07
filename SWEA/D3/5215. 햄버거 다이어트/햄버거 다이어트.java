@@ -44,6 +44,17 @@ public class Solution {
 	}
 
 	static void powerSet(int cnt, boolean[] selected) {
+		if (cnt < burger) {
+			int tempCalorie =0;
+			for (int i = 0; i < cnt; i++) {
+				if(selected[i]) {
+					tempCalorie += calories[i];
+				}
+			}
+			if(tempCalorie > limit_calories) {
+				return;
+			}
+		}
 
 		if (cnt == burger) {
 			int temp = 0;
