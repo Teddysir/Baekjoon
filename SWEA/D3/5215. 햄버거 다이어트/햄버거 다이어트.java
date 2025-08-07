@@ -1,5 +1,6 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Solution {
 
@@ -22,7 +23,7 @@ public class Solution {
 			ans = 0;
 			tastes = new int[burger];
 			calories = new int[burger];
-		
+
 			for (int i = 0; i < burger; i++) {
 				st = new StringTokenizer(br.readLine());
 
@@ -33,7 +34,8 @@ public class Solution {
 				calories[i] = calorie;
 
 			}
-			dp(0, 0, 0);
+
+			powerSet(0, new boolean[burger]);
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
 		}
@@ -41,19 +43,30 @@ public class Solution {
 		System.out.println(sb);
 	}
 
-	static void dp(int cnt, int score, int calorie) {
+	static void powerSet(int cnt, boolean[] selected) {
 
-		if (limit_calories < calorie) {
-			return;
-		}
 		if (cnt == burger) {
-			ans = Math.max(ans, score);
+			int temp = 0;
+			int tmpCalorie = 0;
+
+			for (int i = 0; i < burger; i++) {
+				if (selected[i]) {
+					temp += tastes[i];
+					tmpCalorie += calories[i];
+				}
+			}
+			if (tmpCalorie < limit_calories) {
+				ans = Math.max(temp, ans);
+			}
+
 			return;
 		}
 
-		dp(cnt + 1, score + tastes[cnt], + calorie + calories[cnt]);
-		
-		dp(cnt +1, score, calorie);
+		selected[cnt] = true;
+		powerSet(cnt + 1, selected);
+
+		selected[cnt] = false;
+		powerSet(cnt + 1, selected);
 
 	}
 
