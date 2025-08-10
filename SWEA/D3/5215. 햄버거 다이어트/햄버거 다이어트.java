@@ -1,83 +1,58 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Solution {
 
-	static int burger, limit_calories, TC, ans;
-	static int[] tastes;
+	static int TC, N, L, ans;
 	static int[] calories;
+	static int[] tastes;
 
 	public static void main(String args[]) throws Exception {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
+
 		TC = Integer.parseInt(br.readLine());
 
 		for (int k = 1; k <= TC; k++) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			burger = Integer.parseInt(st.nextToken());
-			limit_calories = Integer.parseInt(st.nextToken());
 
+			N = Integer.parseInt(st.nextToken());
+			L = Integer.parseInt(st.nextToken());
+
+			calories = new int[N];
+			tastes = new int[N];
 			ans = 0;
-			tastes = new int[burger];
-			calories = new int[burger];
 
-			for (int i = 0; i < burger; i++) {
+			for (int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
-
-				int taste = Integer.parseInt(st.nextToken());
-				int calorie = Integer.parseInt(st.nextToken());
-
-				tastes[i] = taste;
-				calories[i] = calorie;
-
+				tastes[i] = Integer.parseInt(st.nextToken());
+				calories[i] = Integer.parseInt(st.nextToken());
 			}
 
-			powerSet(0, new boolean[burger]);
+			solution(0, 0, 0);
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
 		}
 
 		System.out.println(sb);
+
 	}
 
-	static void powerSet(int cnt, boolean[] selected) {
-		if (cnt < burger) {
-			int tempCalorie =0;
-			for (int i = 0; i < cnt; i++) {
-				if(selected[i]) {
-					tempCalorie += calories[i];
-				}
-			}
-			if(tempCalorie > limit_calories) {
-				return;
-			}
-		}
+	static void solution(int cnt, int calorie, int score) {
 
-		if (cnt == burger) {
-			int temp = 0;
-			int tmpCalorie = 0;
-
-			for (int i = 0; i < burger; i++) {
-				if (selected[i]) {
-					temp += tastes[i];
-					tmpCalorie += calories[i];
-				}
-			}
-			if (tmpCalorie < limit_calories) {
-				ans = Math.max(temp, ans);
-			}
-
+		if (calorie > L) {
 			return;
 		}
 
-		selected[cnt] = true;
-		powerSet(cnt + 1, selected);
+		if (cnt == N) {
+			ans = Math.max(ans, score);
+			return;
+		}
 
-		selected[cnt] = false;
-		powerSet(cnt + 1, selected);
+		solution(cnt + 1, calorie, score);
+		solution(cnt + 1, calorie + calories[cnt], score + tastes[cnt]);
 
 	}
 
