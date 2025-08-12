@@ -6,7 +6,7 @@ public class Solution {
 	static int T, N, ans;
 	static int[] math;
 	static int[] nums;
-	static List<Integer> list;
+	static int max, min;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,12 +29,12 @@ public class Solution {
 			}
 
 			ans = 0;
-			list = new ArrayList<Integer>();
+			min = Integer.MAX_VALUE;
+			max = Integer.MIN_VALUE;
+
 			mathCal(0, Arrays.copyOf(math, 4), new int[N - 1], nums);
 
-			Collections.sort(list);
-
-			ans = list.get(list.size() - 1) - list.get(0);
+			ans = max - min;
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
 		}
@@ -44,7 +44,9 @@ public class Solution {
 
 	static void mathCal(int cnt, int[] tempMath, int[] mathList, int[] numbers) {
 		if (cnt == N - 1) {
-			list.add(calculator(mathList, numbers));
+			int tempResult = calculator(mathList, numbers);
+			max = Math.max(max, tempResult);
+			min = Math.min(min, tempResult);
 			return;
 		}
 
