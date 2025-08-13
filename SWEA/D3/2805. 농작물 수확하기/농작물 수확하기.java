@@ -1,59 +1,57 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
 
-class Solution {
+public class Solution {
 
-    static int[][] map;
-    static int N;
+	static int TC, ans, N;
+	static int[][] map;
+	static boolean[][] visited;
 
-    public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		TC = Integer.parseInt(br.readLine());
 
-        StringBuilder sb = new StringBuilder();
+		for (int k = 1; k <= TC; k++) {
 
-        int I = Integer.parseInt(br.readLine());
+			N = Integer.parseInt(br.readLine());
+			map = new int[N][N];
+			visited = new boolean[N][N];
+			ans = 0;
 
-        for (int test_case = 1; test_case <= I; test_case++) {
+			// 맵을 입력 받는 코드
+			for (int i = 0; i < N; i++) {
+				String input = br.readLine();
+				for (int j = 0; j < N; j++) {
+					map[i][j] = input.charAt(j) - 48;
+				}
+			}
+			
+			// 마름모(중단 미포함) 상단 더하는 코드 
+			for (int i = 0; i < N / 2; i++) {
+				for (int j = 0; j <= i; j++) {
+					ans += map[i][N / 2 - j];
+					ans += map[i][N / 2 + j];
+				}
+			}
 
-            N = Integer.parseInt(br.readLine());
+			// 마름모 (중간포함) 하단 구하는 코드 
+			for (int i = 0; i <= N / 2; i++) {
+				for (int j = 0; j <= N / 2 - i; j++) {
+					ans += map[N / 2 + i][N / 2 - j];
+					ans += map[N / 2 + i][N / 2 + j];
+				}
+			}
 
-            map = new int[N][N];
+			for (int i = 0; i < N; i++) {
+				ans -= map[i][N / 2];
+			}
 
-            for (int i = 0; i < N; i++) {
-                String input = br.readLine();
-                for (int j = 0; j < N; j++) {
-                    map[i][j] = Integer.parseInt(String.valueOf(input.charAt(j)));
-                }
-            }
-            int count = 0;
+			sb.append("#").append(k).append(" ").append(ans).append("\n");
+		}
+		System.out.println(sb);
 
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < N; j++) {
-                    if (j == (N / 2) - i) {
-                        for (int k = (N / 2) - i; k <= (N / 2) + i; k++) {
-                            count += map[i][k];
-                        }
-                    }
-                    if( j == (N/2) + (N-i-1)) {
-                        for(int k = (N/2)-(N-i-1); k <= (N/2)+(N-i-1); k++ ){
-                            count += map[i][k];
-                        }
-                    }
-                }
-            }
-
-            for(int i = 0; i < N; i++ ){
-                count -= map[N/2][i];
-            }
-
-
-            sb.append("#").append(test_case).append(" ").append(count).append("\n");
-
-        }
-        System.out.println(sb);
-
-    }
+	}
 
 }
