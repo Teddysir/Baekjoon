@@ -3,22 +3,22 @@ import java.util.*;
 
 public class Solution {
 
-	static int T, size, maxX, maxY, max, tempMax;
+	static int TC, ans, size, minR, minC;
 	static int[][] map;
 	static boolean[][] visited;
-	static int[] dx = { 1, -1, 0, 0 };
-	static int[] dy = { 0, 0, 1, -1 };
 
-	public static void main(String args[]) throws Exception {
+	static int[] dr = { 1, -1, 0, 0 };
+	static int[] dc = { 0, 0, 1, -1 };
 
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 
-		T = Integer.parseInt(br.readLine());
+		TC = Integer.parseInt(br.readLine());
 
-		for (int k = 1; k <= T; k++) {
+		for (int k = 1; k <= TC; k++) {
+
 			size = Integer.parseInt(br.readLine());
-
 			map = new int[size][size];
 
 			for (int i = 0; i < size; i++) {
@@ -27,59 +27,62 @@ public class Solution {
 					map[i][j] = Integer.parseInt(st.nextToken());
 				}
 			}
-			tempMax = 0;
-			max = 0;
-			maxX = 0;
-			maxY = 0;
+
+			ans = 0;
+			minR = 0;
+			minC = 0;
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					visited = new boolean[size][size];
-					tempMax = bfs(i, j);
-					if (tempMax == max) {
-						if (map[i][j] < map[maxX][maxY]) {
-							maxX = i;
-							maxY = j;
+					int temp_ans = solution(i, j);
+
+					if (ans == temp_ans) {
+						if (map[minR][minC] > map[i][j]) {
+							minR = i;
+							minC = j;
 						}
 					}
-					if (tempMax > max) {
-						max = tempMax;
-						maxX = i;
-						maxY = j;
 
+					if (temp_ans > ans) {
+						ans = temp_ans;
+						minR = i;
+						minC = j;
 					}
+
 				}
 			}
 
-			sb.append("#").append(k).append(" ").append(map[maxX][maxY]).append(" ").append(max).append("\n");
+			sb.append("#").append(k).append(" ").append(map[minR][minC]).append(" ").append(ans).append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	static int bfs(int x, int y) {
-		Queue<int[]> q = new LinkedList<>();
-		q.add(new int[] { x, y });
-		visited[x][y] = true;
-		int count = 1;
+	static int solution(int row, int col) {
+		Queue<int[]> q = new LinkedList<int[]>();
+		q.add(new int[] { row, col });
+		visited[row][col] = true;
+
+		int temp_ans = 1;
 
 		while (!q.isEmpty()) {
-			int temp[] = q.poll();
+			int[] temp = q.poll();
 
 			for (int i = 0; i < 4; i++) {
-				int nx = temp[0] + dx[i];
-				int ny = temp[1] + dy[i];
+				int nr = temp[0] + dr[i];
+				int nc = temp[1] + dc[i];
 
-				if (nx >= 0 && ny >= 0 && nx < size && ny < size && !visited[nx][ny]) {
-					if (map[nx][ny] - 1 == map[nx - dx[i]][ny - dy[i]]) {
-						count++;
-						visited[nx][ny] = true;
-						q.add(new int[] { nx, ny });
+				if (nr >= 0 && nc >= 0 && nr < size && nc < size && !visited[nr][nc]) {
+					if (map[temp[0]][temp[1]] + 1 == map[nr][nc]) {
+						temp_ans++;
+						visited[nr][nc] = true;
+						q.add(new int[] { nr, nc });
 					}
 				}
 			}
-
 		}
 
-		return count;
+		return temp_ans; // 최대로 이동할 수 있는
+
 	}
 
 }
