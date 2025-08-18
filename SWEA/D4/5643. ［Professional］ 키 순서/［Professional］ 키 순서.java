@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.*;
 
@@ -32,21 +31,18 @@ public class Solution {
 			ans = 0;
 
 			for (int i = 1; i <= N; i++) {
-				boolean flag = true;
+				boolean flag = false; // 각각 하나씩 flag세워서 가능한애들 체크
 				visited = new boolean[N + 1];
 				small(i);
 				big(i);
-//				System.out.println(i + " " + Arrays.toString(visited));
-				for(int j = 1; j <= N; j++) {
-					if(visited[j] == false) {
-						flag = false;
-					}
+				for (int j = 1; j <= N; j++) {
+					if (!visited[j])
+						flag = true;
 				}
-				if(flag) {
+				if (!flag) {
 					ans++;
 				}
 			}
-			
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
 		}
@@ -56,18 +52,18 @@ public class Solution {
 	}
 
 	static void small(int start) {
-
 		visited[start] = true;
+
 		for (int i = 1; i <= N; i++) {
 			if (arr[i][start] == 1 && !visited[i]) {
 				visited[i] = true;
 				small(i);
 			}
 		}
+
 	}
 
 	static void big(int start) {
-		visited[start] = true;
 		for (int i = 1; i <= N; i++) {
 			if (arr[start][i] == 1 && !visited[i]) {
 				visited[i] = true;
@@ -75,4 +71,5 @@ public class Solution {
 			}
 		}
 	}
+
 }
