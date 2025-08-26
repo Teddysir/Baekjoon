@@ -39,6 +39,10 @@ public class Solution {
 	}
 
 	static void solution(int cnt, int nx, int ny, boolean[] visited, int dist) {
+		
+		if(dist >= ans) {
+			return;
+		}
 
 		if (cnt == N) {
 			dist += getDist(nx, posX[N + 1], ny, posY[N + 1]);
