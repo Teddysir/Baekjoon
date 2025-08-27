@@ -5,13 +5,13 @@ public class Solution {
 
 	static int TC, N;
 	static double ans;
-	static long[] list_x;
-	static long[] list_y;
-	static double E; 
-	static int[] parent;
+	static double E;
 
+	static int[] list_x, list_y;
+	static boolean[] visited;
+
+	static List<Edge>[] adjList;
 	static Node[] nodeList;
-	static List<Edge> edgeList;
 
 	static class Node {
 		long x, y;
@@ -23,12 +23,11 @@ public class Solution {
 	}
 
 	static class Edge implements Comparable<Edge> {
-		int x, y;
+		int to;
 		double weight;
 
-		Edge(int x, int y, double weight) {
-			this.x = x;
-			this.y = y;
+		Edge(int to, double weight) {
+			this.to = to;
 			this.weight = weight;
 		}
 
@@ -49,8 +48,18 @@ public class Solution {
 		for (int k = 1; k <= TC; k++) {
 			N = Integer.parseInt(br.readLine());
 
-			list_x = new long[N];
-			list_y = new long[N];
+			/// 배열 선언부
+			ans = 0;
+			list_x = new int[N];
+			list_y = new int[N];
+			visited = new boolean[N + 1];
+			adjList = new ArrayList[N];
+			nodeList = new Node[N];
+			for (int i = 0; i < N; i++) {
+				adjList[i] = new ArrayList<Edge>();
+			}
+//			Arrays.fill(visited, Integer.MAX_VALUE); // 음? 
+			///
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < N; i++) {
@@ -61,71 +70,57 @@ public class Solution {
 			for (int i = 0; i < N; i++) {
 				list_y[i] = Integer.parseInt(st.nextToken());
 			}
+
+			for (int i = 0; i < N; i++) {
+				int x = list_x[i];
+				int y = list_y[i];
+
+				nodeList[i] = new Node(x, y);
+			}
+
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < N; j++) {
+					double dist = euclid(nodeList[i].x, nodeList[j].x, nodeList[i].y, nodeList[j].y);
+					adjList[i].add(new Edge(j, dist));
+					adjList[j].add(new Edge(i, dist));
+				}
+			}
+			prim(1);
+
 			E = Double.parseDouble(br.readLine());
 
-			nodeList = new Node[N];
-			for (int i = 0; i < N; i++) {
-				nodeList[i] = new Node(list_x[i], list_y[i]); // 좌표에대한 노드 만들고
-			}
-
-			edgeList = new ArrayList<Edge>();
-			for (int i = 0; i < N; i++) {
-				for (int j = i + 1; j < N; j++) {
-					double dist = euclid(nodeList[i], nodeList[j]);
-					edgeList.add(new Edge(i, j, dist));
-				}
-			}
-
-			Collections.sort(edgeList);
-
-			parent = new int[N];
-			int count = 0;
-			for (int i = 0; i < N; i++) {
-				parent[i] = i;
-			}
-			ans = 0;
-
-			for (Edge edge : edgeList) {
-				if (union(edge.x, edge.y)) {
-					ans += edge.weight; // 합쳤으면 정답에 가중치 추가
-					count++;
-				}
-				if (count == N - 1) {
-					break;
-				}
-			}
-
-			sb.append("#").append(k).append(" ").append(Math.round(ans)).append("\n");
+			sb.append("#").append(k).append(" ").append(Math.round(ans * E)).append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	static boolean union(int x, int y) {
-		int nx = find(x);
-		int ny = find(y);
-		if (nx != ny) {
-			if(nx < ny) {
-				parent[ny] = nx;				
-			} else {
-				parent[nx] = ny;
+	static void prim(int start) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(start, 0));
+		while (!pq.isEmpty()) {
+
+			Edge e = pq.poll();
+			int to = e.to;
+			double weight = e.weight;
+			if (visited[e.to])
+				continue;
+
+			visited[to] = true;
+			ans += weight;
+
+			for (Edge edge : adjList[to]) {
+				if (!visited[edge.to]) {
+					pq.add(new Edge(edge.to, edge.weight));
+				}
 			}
-			return true;
 		}
-		return false;
+
 	}
 
-	static int find(int x) {
-		if (parent[x] == x) {
-			return x;
-		}
-		return parent[x] = find(parent[x]);
-	}
-
-	static double euclid(Node n1, Node n2) {
-
-		long nx = n1.x - n2.x;
-		long ny = n1.y - n2.y;
-		return (((nx * nx) + (ny * ny)) * E);
+	static double euclid(long x1, long x2, long y1, long y2) {
+		long nx = x2 - x1;
+		long ny = y2 - y1;
+		return (nx * nx + ny * ny);
 	}
 
 }
