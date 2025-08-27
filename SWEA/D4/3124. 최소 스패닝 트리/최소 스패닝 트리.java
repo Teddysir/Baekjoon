@@ -5,21 +5,15 @@ public class Solution {
 
 	static int TC, V, E;
 	static long ans;
-
-	static int from, to;
-	static long weight;
-	static int[] parent;
-	static List<Edge> edgeList;
-
-	static int count;
+	static List<Edge>[] adjList;
+	static boolean[] visited;
 
 	static class Edge implements Comparable<Edge> {
-		int x, y;
+		int to;
 		long weight;
 
-		Edge(int x, int y, long weight) {
-			this.x = x;
-			this.y = y;
+		Edge(int to, long weight) {
+			this.to = to;
 			this.weight = weight;
 		}
 
@@ -38,69 +32,55 @@ public class Solution {
 
 		TC = Integer.parseInt(br.readLine());
 		for (int k = 1; k <= TC; k++) {
-
 			StringTokenizer st = new StringTokenizer(br.readLine());
 
-			V = Integer.parseInt(st.nextToken()); // 노드
-			E = Integer.parseInt(st.nextToken()); // 간선
+			V = Integer.parseInt(st.nextToken());
+			E = Integer.parseInt(st.nextToken());
 
-			/// 배열 선언부
-			parent = new int[V + 1]; // 정점의 좌표는 1부터 시작이기때문에 배열은 1~V까지 ,
-			for (int i = 1; i < V + 1; i++) {
-				parent[i] = i;
-			}
-			edgeList = new ArrayList<Edge>();
 			ans = 0;
-			count = 0;
-			///
+			visited = new boolean[V+1];
+			adjList = new ArrayList[V+1];
+			for (int i = 0; i < V+1; i++) {
+				adjList[i] = new ArrayList<Edge>();
+			}
 
 			for (int i = 0; i < E; i++) {
 				st = new StringTokenizer(br.readLine());
-				from = Integer.parseInt(st.nextToken()); // 시작
-				to = Integer.parseInt(st.nextToken()); /// 도착
-				weight = Long.parseLong(st.nextToken()); // 가중치 //-> 음수도가능
-				edgeList.add(new Edge(from, to, weight));
-			}
 
-			Collections.sort(edgeList);
+				int from = Integer.parseInt(st.nextToken());
+				int to = Integer.parseInt(st.nextToken());
+				long weight = Integer.parseInt(st.nextToken());
 
-			for (Edge edge : edgeList) {
-				if (union(edge.x, edge.y)) {
-					ans += edge.weight;
-					count++;
-				}
-				if (count == V - 1) {
-					break;
-				}
+				adjList[from].add(new Edge(to, weight));
+				adjList[to].add(new Edge(from, weight));
+
 			}
+			prim(1, V);
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	static boolean union(int x, int y) {
+	static void prim(int start, int n) {
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		pq.add(new Edge(start, 0));
+		while (!pq.isEmpty()) {
+			Edge edge = pq.poll();
+			int v = edge.to;
+			long weight = edge.weight;
+			if (visited[v])
+				continue;
 
-		int nx = find(x);
-		int ny = find(y);
+			visited[v] = true;
+			ans += weight;
 
-		if (nx != ny) {
-			if (nx > ny) {
-				parent[nx] = ny;
-			} else {
-				parent[ny] = nx;
+			for (Edge e : adjList[v]) {
+				if (!visited[e.to]) {
+					pq.add(new Edge(e.to, e.weight));
+				}
 			}
-			return true; // 유니온 성공
 		}
-		return false; // 유니온 실패
-
-	}
-
-	static int find(int x) {
-		if (parent[x] == x) {
-			return x;
-		}
-		return parent[x] = find(parent[x]);
 	}
 
 }
