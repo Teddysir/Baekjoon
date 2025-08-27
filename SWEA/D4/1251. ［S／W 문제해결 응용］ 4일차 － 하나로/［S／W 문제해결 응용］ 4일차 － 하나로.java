@@ -79,7 +79,7 @@ public class Solution {
 			}
 
 			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
+				for (int j = i+1; j < N; j++) {
 					double dist = euclid(nodeList[i].x, nodeList[j].x, nodeList[i].y, nodeList[j].y);
 					adjList[i].add(new Edge(j, dist));
 					adjList[j].add(new Edge(i, dist));
