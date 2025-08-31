@@ -3,66 +3,64 @@ import java.util.*;
 
 public class Main {
 
-    public static int[][] square;
-    public static int white = 0;
-    public static int blue = 0;
+	static int N;
+	static int[][] map;
+	static int blue, white;
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        int N = Integer.parseInt(br.readLine());
+		N = Integer.parseInt(br.readLine());
 
-        square = new int[N][N];
+		map = new int[N][N];
 
-        for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-            for (int j = 0; j < N; j++) {
-                square[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
 
-        solution(0, 0, N);
+		sep(0, 0, N);
 
-        System.out.println(white);
-        System.out.println(blue);
+		sb.append(white).append("\n").append(blue);
+		System.out.println(sb);
 
-    }
+	}
 
-    public static void solution(int row, int col, int size) {
+	static void sep(int row, int col, int size) {
 
-        if (check(row, col, size)) {
-            if (square[row][col] == 1) { // 1이면 파랑 더하기ㅏ
-                blue++;
-            } else {
-                white++;
-            }
-            return;
-        }
+		if (check(row, col, size)) {
+			if (map[row][col] == 1) {
+				blue++;
+			} else {
+				white++;
+			}
+			return;
+		}
 
-        int newSize = size / 2;
+		int newSize = size / 2;
 
-        solution(row, col + newSize, newSize); // 1
-        solution(row, col, newSize); // 2
-        solution(row + newSize, col, newSize); // 3
-        solution(row + newSize, col + newSize, newSize); // 4
+		sep(row, col, newSize); // 2사분면
+		sep(row, col + newSize, newSize); // 1사분면
+		sep(row + newSize, col, newSize); // 3사분면
+		sep(row + newSize, col + newSize, newSize); // 4사분면
 
-    }
+	}
 
-    public static boolean check(int row, int col, int size) {
+	static boolean check(int row, int col, int size) {
+		int color = map[row][col];
 
-        int color = square[row][col]; // 1이면 파랑, 0이면 흰색일거고?
-
-        for (int i = row; i < row + size; i++) {
-            for (int j = col; j < col + size; j++) {
-                if (square[i][j] != color) {
-                    return false; // 하나라도 안같으면 바로 false 반환 해주고
-                }
-            }
-        }
-        return true;
-    }
+		for (int i = row; i < row + size; i++) {
+			for (int j = col; j < col + size; j++) {
+				if (map[i][j] != color) {
+					return false; // 안됨
+				}
+			}
+		}
+		return true;
+	}
 
 }
-
-
