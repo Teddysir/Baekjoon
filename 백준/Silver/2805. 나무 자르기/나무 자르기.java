@@ -26,7 +26,6 @@ public class Main {
 				max = trees[i]; //일단 최대높이 정해주고 
 			}
 		}
-		Arrays.sort(trees); // 정렬ㄹ도 꼭 해야하고 
 
 		solution();
 
