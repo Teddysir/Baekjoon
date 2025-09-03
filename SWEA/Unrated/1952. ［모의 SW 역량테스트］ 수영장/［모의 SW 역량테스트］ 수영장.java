@@ -4,57 +4,44 @@ import java.util.*;
 public class Solution {
 
 	static int TC, ans;
-	static int[] fee;
-	static int[] day;
+	static int[] fees;
+	static int[] dp;
+	static int[] month;
 
 	public static void main(String[] args) throws Exception {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 
 		TC = Integer.parseInt(br.readLine());
-
 		for (int k = 1; k <= TC; k++) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			fee = new int[5];
-			for (int i = 1; i <= 4; i++) {
-				fee[i] = Integer.parseInt(st.nextToken());
+			fees = new int[4];
+			for (int i = 0; i < 4; i++) {
+				fees[i] = Integer.parseInt(st.nextToken());
 			}
 
-			day = new int[13];
+			dp = new int[13];
+			month = new int[13];
+
 			st = new StringTokenizer(br.readLine());
 			for (int i = 1; i <= 12; i++) {
-				day[i] = Integer.parseInt(st.nextToken());
+				month[i] = Integer.parseInt(st.nextToken());
 			}
 
-			ans = Integer.MAX_VALUE;
-			cal(0, 0);
-			sb.append("#").append(k).append(" ").append(Math.min(fee[4], ans)).append("\n");
-		}
+			for (int i = 1; i <= 12; i++) {
+				dp[i] = Math.min(dp[i - 1] + month[i] * fees[0], dp[i - 1] + fees[1]);
 
+				if (i >= 3) {
+					dp[i] = Math.min(dp[i], dp[i - 3] + fees[2]);
+				}
+			}
+
+			sb.append("#").append(k).append(" ").append(Math.min(dp[12], fees[3])).append("\n");
+
+		}
 		System.out.println(sb);
-
-	}
-
-	static void cal(int cnt, int temp_fee) {
-
-		if (cnt >= 12) {
-			ans = Math.min(temp_fee, ans);
-			return;
-		}
-
-		// days[cnt] * fee[1]; cnt++;
-		// days[cnt] * fee[2]; cnt++;
-		// days[cnt] * fee[3]; cnt + 3\\
-
-		cal(cnt + 1, temp_fee + fee[1] * day[cnt + 1]);
-
-		cal(cnt + 1, temp_fee + fee[2]);
-
-		if (cnt + 3 <= 12) {
-			cal(cnt + 3, temp_fee + fee[3]);
-		} 
-
 	}
 
 }
