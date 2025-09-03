@@ -1,102 +1,76 @@
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
 
-	static int V, E;
-	static long ans;
-	static long max;
+    static class Edge implements Comparable<Edge> {
+        int from, to;
+        int weight;
 
-	static boolean[] visited;
-	static List<Home>[] adjList;
+        Edge(int from, int to, int weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
+        }
 
-	static class Home implements Comparable<Home> {
-		int to;
-		long weight;
+        @Override
+        public int compareTo(Edge o) {
+            return this.weight - o.weight;
+        }
+    }
 
-		Home(int to, long weight) {
-			this.to = to;
-			this.weight = weight;
-		}
+    static int[] parent;
 
-		@Override
-		public int compareTo(Home o) {
-			// TODO Auto-generated method stub
-			return Long.compare(this.weight, o.weight);
-		}
+    static int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
 
-	}
+    static boolean union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+        if (rootA == rootB) return false;
+        parent[rootB] = rootA;
+        return true;
+    }
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int V = Integer.parseInt(st.nextToken());
+        int E = Integer.parseInt(st.nextToken());
 
-		V = Integer.parseInt(st.nextToken());
-		E = Integer.parseInt(st.nextToken());
-		visited = new boolean[V + 1];
-		adjList = new ArrayList[V + 1];
-		for (int i = 0; i < V + 1; i++) {
-			adjList[i] = new ArrayList<Home>();
-		}
+        List<Edge> edges = new ArrayList<>();
 
-		int start = -1;
-		long small_weight = Integer.MAX_VALUE;
-		for (int i = 0; i < E; i++) {
-			st = new StringTokenizer(br.readLine());
-			int from = Integer.parseInt(st.nextToken());
-			int to = Integer.parseInt(st.nextToken());
-			long weight = Long.parseLong(st.nextToken());
+        for (int i = 0; i < E; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int weight = Integer.parseInt(st.nextToken());
 
-			if (weight < small_weight) {
-				small_weight = weight;
-				start = from;
-			}
+            edges.add(new Edge(from, to, weight));
+        }
 
-			adjList[from].add(new Home(to, weight));
-			adjList[to].add(new Home(from, weight));
+        Collections.sort(edges); // 간선 가중치 오름차순 정렬
 
-		}
-//		System.out.println(start);
+        parent = new int[V + 1];
+        for (int i = 1; i <= V; i++) parent[i] = i;
 
-		prim(start); // 1부터 시작하기보단, 가중치가 가장 낮은애들먼저 해야하는듯?
+        int count = 0;
+        int total = 0;
+        int maxEdge = 0;
 
-//		System.out.println(Arrays.toString(visited));
-		System.out.println(ans - max);
+        for (Edge e : edges) {
+            if (union(e.from, e.to)) {
+                total += e.weight;
+                maxEdge = e.weight;
+                count++;
+                if (count == V - 1) break;
+            }
+        }
 
-	}
-
-	static void prim(int start) {
-		PriorityQueue<Home> pq = new PriorityQueue<>();
-		pq.add(new Home(start, 0));
-
-		while (!pq.isEmpty()) {
-
-			Home h = pq.poll();
-
-			if (visited[h.to])
-				continue;
-
-//			System.out.println(h.to + " " + h.weight + " 이렇게 더합니다 ");
-
-//			System.out.println(h.to + " : " + h.weight + " 이거부터 더합니다.");
-			ans += h.weight;
-//			count++;
-			visited[h.to] = true;
-			if (h.weight > max) {
-				max = h.weight;
-			}
-
-			for (Home home : adjList[h.to]) {
-				if (!visited[home.to]) {
-//					System.out.println(home.to + ": 방문");
-					pq.add(new Home(home.to, home.weight));
-				}
-			}
-		}
-
-	}
-
+        System.out.println(total - maxEdge); // 가장 큰 간선 제거
+    }
 }
