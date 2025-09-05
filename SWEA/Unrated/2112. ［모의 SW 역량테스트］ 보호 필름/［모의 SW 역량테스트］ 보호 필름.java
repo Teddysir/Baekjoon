@@ -3,87 +3,87 @@ import java.util.*;
 
 public class Solution {
 
-	static int D, W, K, TC;
-	static int[][] map;
-	static int ans;
-	static int[] A, B; // ??
+	static int TC, ans, D, W, K;
+	static int[][] film;
+	static int[] A;
+	static int[] B;
 
 	public static void main(String[] args) throws Exception {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 
 		TC = Integer.parseInt(br.readLine());
-
 		for (int k = 1; k <= TC; k++) {
 
 			StringTokenizer st = new StringTokenizer(br.readLine());
-
 			D = Integer.parseInt(st.nextToken());
 			W = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-
-			map = new int[D][W];
+			ans = D; // 모든 열에 다 넣을때가 최대일듯?
 
 			A = new int[W];
 			B = new int[W];
 			Arrays.fill(B, 1);
 
+			film = new int[D][W];
+
 			for (int i = 0; i < D; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j = 0; j < W; j++) {
-					map[i][j] = Integer.parseInt(st.nextToken());
+					film[i][j] = Integer.parseInt(st.nextToken());
 				}
 			}
-			
-			ans = K;
 
-			make(0, 0);
+			dfs(0, 0);
 
 			sb.append("#").append(k).append(" ").append(ans).append("\n");
+
 		}
-
 		System.out.println(sb);
-
 	}
 
-	static void make(int r, int cnt) {
+	static void dfs(int count, int depth) {
 		if (check()) {
-			ans = Math.min(ans, cnt);
+			if (count < ans) {
+				ans = count;
+				return;
+			}
+		}
+
+		if (count > ans) {
 			return;
 		}
 
-		if (ans < cnt) {
+		if (depth == D) {
 			return;
 		}
 
-		if (r == D) {
-			return;
-		}
+		dfs(count, depth + 1);
+		int[] remember = film[depth];
 
-		make(r + 1, cnt);
-		int[] tmp = map[r];
+		film[depth] = A;
+		dfs(count + 1, depth + 1);
 
-		map[r] = A;
-		make(r + 1, cnt + 1);
+		film[depth] = B;
+		dfs(count + 1, depth + 1);
 
-		map[r] = B;
-		make(r + 1, cnt + 1);
+		film[depth] = remember;
 
-		map[r] = tmp;
 	}
 
 	static boolean check() {
-		for (int c = 0; c < W; c++) {
-			boolean flag = false;
-			int cnt = 1;
 
-			for (int r = 1; r < D; r++) {
-				if (map[r][c] == map[r - 1][c]) {
-					cnt++;
+		for (int i = 0; i < W; i++) {
+			boolean flag = false;
+			int check = 1;
+			for (int j = 1; j < D; j++) {
+				if (film[j][i] == film[j - 1][i]) {
+					check++;
 				} else {
-					cnt = 1;
+					check = 1;
 				}
-				if (cnt == K) {
+				if (check == K) {
 					flag = true;
 					break;
 				}
@@ -92,6 +92,7 @@ public class Solution {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
