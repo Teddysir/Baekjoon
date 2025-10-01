@@ -17,10 +17,10 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 
 		N = Integer.parseInt(br.readLine());
-		list = new ArrayList[N+1];
-		num = new int[N+1];
-		indegree = new int[N+1];
-		result = new int[N+1];
+		list = new ArrayList[N + 1];
+		num = new int[N + 1];
+		indegree = new int[N + 1];
+		result = new int[N + 1];
 
 		for (int i = 1; i <= N; i++) {
 			list[i] = new ArrayList<Integer>();
@@ -46,16 +46,13 @@ public class Main {
 					indegree[i]++;
 				}
 			}
-
-
 		}
+
 		solution();
 
 		for (int i = 1; i <= N; i++) {
 			System.out.println(result[i]);
 		}
-
-//		System.out.println(Arrays.toString(num));
 
 	}
 
@@ -64,16 +61,17 @@ public class Main {
 		for (int i = 1; i <= N; i++) {
 			if (indegree[i] == 0) {
 				q.add(i);
-				result[i] = num[i];
+				result[i] = num[i]; // 결과값은 일단 자신의 건물수로 초기
 			}
 		}
 
 		while (!q.isEmpty()) {
 
-			int temp = q.poll();
+			int cur = q.poll();
 
-			for (int next : list[temp]) {
-				result[next] = Math.max(result[next], result[temp] + num[next]);
+			for (int next : list[cur]) {
+				result[next] = Math.max(result[next], result[cur] + num[next]);
+
 				indegree[next]--;
 				if (indegree[next] == 0) {
 					q.add(next);
@@ -81,6 +79,7 @@ public class Main {
 			}
 
 		}
+
 	}
 
 }
