@@ -75,7 +75,7 @@ public class Main {
 			if (visited[v]) {
 				continue;
 			}
-			ans += temp.weight;
+			ans += Math.sqrt(temp.weight);
 			visited[v] = true;
 			for (Edge e : adjList[v]) {
 				if (!visited[e.from]) {
@@ -86,9 +86,9 @@ public class Main {
 	}
 
 	static double uclid(double x1, double y1, double x2, double y2) {
-		double nx = Math.abs(x2 - x1);
-		double ny = Math.abs(y2 - y1);
-		return Math.sqrt(Math.pow(nx, 2) + Math.pow(ny, 2));
+		double nx = x2 - x1;
+		double ny = y2 - y1;
+		return (nx * nx) + (ny * ny);
 	}
 
 }
