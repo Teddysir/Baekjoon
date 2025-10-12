@@ -5,91 +5,57 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+	static int[] arr;
 	static int[] minTree;
 	static int[] maxTree;
-	static int N;
-	static int[] arr;
+	static int N, M;
 
 	Main(int[] arr) {
-		N = arr.length - 1;
 		minTree = new int[N * 4];
 		maxTree = new int[N * 4];
-		build(arr, 1, 1, N);
-
+		minTreeBuild(arr, 1, 0, N - 1);
+		maxTreeBuild(arr, 1, 0, N - 1);
 	}
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = new StringTokenizer(br.readLine());
+	public static void minTreeBuild(int[] arr, int node, int start, int end) {
 
-		int arrSize = Integer.parseInt(st.nextToken());
-		int find_seg = Integer.parseInt(st.nextToken());
-
-		arr = new int[arrSize + 1];
-
-		for (int i = 1; i <= arrSize; i++) {
-			arr[i] = Integer.parseInt(br.readLine());
-		}
-
-		Main seg = new Main(arr);
-		for (int i = 0; i < find_seg; i++) {
-			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
-
-			sb.append(seg.queryMin(start, end)).append(" ").append(seg.queryMax(start, end)).append("\n");
-
-		}
-		System.out.println(sb);
-
-	}
-
-	public void build(int[] arr, int node, int start, int end) {
 		if (start == end) {
 			minTree[node] = arr[start];
+			return;
+		}
+
+		int mid = (start + end) / 2;
+		minTreeBuild(arr, node * 2, start, mid);
+		minTreeBuild(arr, node * 2 + 1, mid + 1, end);
+		minTree[node] = Math.min(minTree[node * 2], minTree[node * 2 + 1]);
+	}
+
+	public static void maxTreeBuild(int[] arr, int node, int start, int end) {
+		if (start == end) {
 			maxTree[node] = arr[start];
 			return;
 		}
 
 		int mid = (start + end) / 2;
-		build(arr, node * 2, start, mid);
-		build(arr, node * 2 + 1, mid + 1, end);
-
-		minTree[node] = Math.min(minTree[node * 2], minTree[node * 2 + 1]);
+		maxTreeBuild(arr, node * 2, start, mid);
+		maxTreeBuild(arr, node * 2 + 1, mid + 1, end);
 		maxTree[node] = Math.max(maxTree[node * 2], maxTree[node * 2 + 1]);
 	}
 
-	public int queryMin(int left, int right) {
-		return queryMin(1, 1, N, left, right);
+	public static int queryMax(int left, int right) {
+		return queryMax(1, 0, N - 1, left, right);
 	}
 
-	public int queryMax(int left, int right) {
-		return queryMax(1, 1, N, left, right);
+	public static int queryMin(int left, int right) {
+		return queryMin(1, 0, N - 1, left, right);
 	}
 
-	public int queryMin(int node, int start, int end, int left, int right) {
-		if (end < left || right < start) {
-			return Integer.MAX_VALUE;
-		}
-
-		if (left <= start && end <= right) { // 내가 찾는 구간사이에 start ~ end 가 있다면 반환,
-			return minTree[node];
-		}
-
-		int mid = (start + end) / 2;
-		int leftMin = queryMin(node * 2, start, mid, left, right);
-		int rightMin = queryMin(node * 2 + 1, mid + 1, end, left, right);
-		return Math.min(leftMin, rightMin);
-
-	}
-
-	public int queryMax(int node, int start, int end, int left, int right) {
-		if (end < left || right < start) {
+	public static int queryMax(int node, int start, int end, int left, int right) {
+		if (left > end || start > right) {
 			return Integer.MIN_VALUE;
 		}
 
-		if (left <= start && end <= right) {
+		if (start >= left && right >= end) {
 			return maxTree[node];
 		}
 
@@ -97,6 +63,47 @@ public class Main {
 		int leftMax = queryMax(node * 2, start, mid, left, right);
 		int rightMax = queryMax(node * 2 + 1, mid + 1, end, left, right);
 		return Math.max(leftMax, rightMax);
+	}
+
+	public static int queryMin(int node, int start, int end, int left, int right) {
+		if (left > end || start > right) {
+			return Integer.MAX_VALUE;
+		}
+
+		if (start >= left && right >= end) {
+			return minTree[node];
+		}
+
+		int mid = (start + end) / 2;
+		int leftMin = queryMin(node * 2, start, mid, left, right);
+		int rightMin = queryMin(node * 2 + 1, mid + 1, end, left, right);
+		return Math.min(leftMin, rightMin);
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		arr = new int[N];
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+
+		Main seg = new Main(arr);
+
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+			sb.append(queryMin(start-1, end-1)).append(" ").append(queryMax(start-1, end-1)).append("\n");
+		}
+		
+		System.out.println(sb);
+
 	}
 
 }
