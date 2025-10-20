@@ -15,12 +15,10 @@ public class Main {
 		N = Integer.parseInt(br.readLine());
 
 		W = new int[N][N];
-		dp = new int[N][(1 << N)];
-
-//		System.out.println(Arrays.toString(dp[1]));
+		dp = new int[N][(1 << N)]; // 배열 만들고,
 
 		for (int i = 0; i < N; i++) {
-			Arrays.fill(dp[i], -1); // 최대로~
+			Arrays.fill(dp[i], -1); // 방문 안했기에 -1로 초기화,
 		}
 
 		for (int i = 0; i < N; i++) {
@@ -34,26 +32,28 @@ public class Main {
 
 	}
 
-	static int dfs(int now, int visit) {
+	static int dfs(int now, int visited) {
 
-		if (visit == (1 << N) - 1) { // 모든걸 방문했다면?
-			if (W[now][0] == 0) {
-				return INF; // 만약 근데 돌아가는 길 없다면 무한,
+		if (visited == (1 << N) - 1) { // 만약 모두 방문했다면 ,
+			if (W[now][0] == 0) { // 근데 만약 돌아갈 수 없다면,
+				return INF; // 무한,
 			}
-			return W[now][0]; // 아니라면,
+			return W[now][0]; // 아니면 최종값 반환
 		}
 
-		if (dp[now][visit] != -1) // 방문한적이 있다면?
-			return dp[now][visit];
-		dp[now][visit] = INF;
+		if (dp[now][visited] != -1) { // 만약 방문 했던곳이라면,
+			return dp[now][visited]; // 반환
+		}
 
-		for (int i = 0; i < N; i++) {
-			if ((visit & (1 << i)) == 0 && W[now][i] != 0) {
-				dp[now][visit] = Math.min(dp[now][visit], dfs(i, visit | (1 << i)) + W[now][i]);
+		dp[now][visited] = INF; // 일단 최대값으로 갱신해주고,
+
+		for (int i = 0; i < N; i++) { // 재귀를 타면서 Top-down 방식으로 질의,
+			if ((visited & (1 << i)) == 0 && W[now][i] != 0) {
+				dp[now][visited] = Math.min(dp[now][visited], dfs(i, visited | (1 << i)) + W[now][i]);
 			}
 		}
 
-		return dp[now][visit];
+		return dp[now][visited];
 	}
 
 }
