@@ -3,70 +3,77 @@ import java.util.*;
 
 public class Main {
 
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+	static StringTokenizer st;
+	static int N, mapCount, cnt;
+	static int[][] map;
+	static boolean[][] visited;
 
-    static int[][] apart;
-    static boolean[][] visited;
+	static int[] dx = { 0, 0, 1, -1 };
+	static int[] dy = { 1, -1, 0, 0 };
 
-    static int N;
-    static int cnt;
+	static List<Integer> ans = new ArrayList<Integer>();
 
-    static List<Integer> answer = new ArrayList<>();
+	public static void main(String[] args) throws Exception {
 
-    public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
 
-        N = Integer.parseInt(br.readLine());
+		map = new int[N][N];
+		visited = new boolean[N][N];
 
-        apart = new int[N][N];
-        visited = new boolean[N][N];
+		for (int i = 0; i < N; i++) {
+			String input = br.readLine();
+			for (int j = 0; j < N; j++) {
+				map[i][j] = input.charAt(j) - 48;
+			}
+		}
 
-        for (int i = 0; i < N; i++) { // 여기까지가 이제 아파트 단지 입력받기
-            String input = br.readLine();
-            for (int j = 0; j < N; j++) {
-                apart[i][j] = input.charAt(j) - '0';
-            }
-        }
-        cnt = 1;
+//		System.out.println(Arrays.deepToString(map));
 
-        for (int i = 0; i < N; i++) { // cnt = 0이고
-            for (int j = 0; j < N; j++) { // 검색을 하는데 만약 1이면서 방문안했으면
-                if (apart[i][j] == 1 && !visited[i][j]) {
-                    DFS(i, j); // DFS 들어가서 찾기
-                    answer.add(cnt);
-                    cnt = 1;
-                }
-            }
-        }
+		cnt = 1;
 
-        Collections.sort(answer);
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j] == 1 && !visited[i][j]) {
+					bfs(i, j);
+					ans.add(cnt);
+					cnt = 1;
+				}
+			}
+		}
 
-        System.out.println(answer.size());
+		Collections.sort(ans);
 
-        for (int i = 0; i < answer.size(); i++) {
-            System.out.println(answer.get(i));
-        }
-    }
+		sb.append(ans.size()).append("\n");
+		for (int i = 0; i < ans.size(); i++) {
+			sb.append(ans.get(i)).append("\n");
+		}
+		System.out.println(sb);
 
+	}
 
-    static void DFS(int x, int y) {
-        visited[x][y] = true; // 해당 좌표 방문체크하고
+	static void bfs(int x, int y) {
+		Queue<int[]> q = new ArrayDeque<int[]>();
+		q.add(new int[] { x, y });
+		visited[x][y] = true;
 
-        for (int i = 0; i < 4; i++) {
-            int nx = x + dx[i];
-            int ny = y + dy[i];
+		while (!q.isEmpty()) {
+			int[] cur = q.poll();
 
-            if (nx >= 0 && ny >= 0 && nx < N && ny < N && !visited[nx][ny]) {
-                if (apart[nx][ny] == 1) {
-                    cnt++;
-                    DFS(nx, ny);
-                }
-            }
-        }
+			for (int i = 0; i < 4; i++) {
+				int nx = cur[0] + dx[i];
+				int ny = cur[1] + dy[i];
 
+				if (nx >= 0 && ny >= 0 && nx < N && ny < N && map[nx][ny] == 1 && !visited[nx][ny]) {
+					cnt++;
+					visited[nx][ny] = true;
+					q.add(new int[] { nx, ny });
+				}
+			}
+		}
 
-    }
+	}
 
 }
