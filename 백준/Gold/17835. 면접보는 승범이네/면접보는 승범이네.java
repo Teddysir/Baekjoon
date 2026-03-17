@@ -19,21 +19,19 @@ public class Main {
         }
     }
 
-    static StringTokenizer st;
     static int N, M, K;
     static long[] dist;
     static List<Node>[] graph;
-    static Queue<long[]> q = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
+    static PriorityQueue<Node> pq = new PriorityQueue<>();
     static long U, C;
 
     public static void main(String[] args) throws IOException {
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        st = new StringTokenizer(br.readLine());
+        FastReader fr = new FastReader();
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        K = Integer.parseInt(st.nextToken());
+        N = fr.nextInt();
+        M = fr.nextInt();
+        K = fr.nextInt();
 
         graph = new ArrayList[N + 1];
 
@@ -46,18 +44,16 @@ public class Main {
         dist[0] = 0;
 
         for (int i = 0; i < M; i++) {
-            st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken());
-            int to = Integer.parseInt(st.nextToken());
-            int weight = Integer.parseInt(st.nextToken());
+            int from = fr.nextInt();
+            int to = fr.nextInt();
+            int weight = fr.nextInt();
 
             graph[to].add(new Node(from, weight));
         }
 
-        st = new StringTokenizer(br.readLine());
         for (int i = 0; i < K; i++) {
-            int city = Integer.parseInt(st.nextToken());
-            q.add(new long[]{city, 0});
+            int city = fr.nextInt();
+            pq.add(new Node(city, 0));
             dist[city] = 0;
         }
 
@@ -75,24 +71,48 @@ public class Main {
     }
 
     static void djikstra() {
-        while (!q.isEmpty()) {
-            long[] cur = q.poll();
-            int from = Math.toIntExact(cur[0]);
-            long cost = cur[1];
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
 
-            if (cost > dist[from]) {
+            if (cur.cost > dist[cur.from]) {
                 continue;
             }
 
-            for (Node nextNode : graph[from]) {
-                long newCost = cost + nextNode.cost;
+            for (Node nextNode : graph[cur.from]) {
+                long newCost = cur.cost + nextNode.cost;
 
                 if (newCost < dist[nextNode.from]) {
                     dist[nextNode.from] = newCost;
-                    q.add(new long[]{nextNode.from, newCost});
+                    pq.add(new Node(nextNode.from, newCost));
                 }
             }
 
+        }
+    }
+
+    static class FastReader {
+        private final byte[] buffer = new byte[1 << 16];
+        private int idx = 0, len = 0;
+        private final InputStream in = System.in;
+
+        private int readByte() throws IOException {
+            if (idx >= len) {
+                len = in.read(buffer);
+                idx = 0;
+                if (len == -1) return -1;
+            }
+            return buffer[idx++];
+        }
+
+        int nextInt() throws IOException {
+            int c, sign = 1, val = 0;
+            do { c = readByte(); } while (c <= 32 && c != -1);
+            if (c == '-') { sign = -1; c = readByte(); }
+            while (c > 32 && c != -1) {
+                val = val * 10 + (c - '0');
+                c = readByte();
+            }
+            return val * sign;
         }
     }
 }
