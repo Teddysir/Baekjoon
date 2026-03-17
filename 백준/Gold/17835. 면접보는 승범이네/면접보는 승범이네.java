@@ -23,7 +23,7 @@ public class Main {
     static int N, M, K;
     static long[] dist;
     static List<Node>[] graph;
-    static PriorityQueue<Node> pq = new PriorityQueue<>();
+    static Queue<long[]> q = new PriorityQueue<>((a, b) -> Long.compare(a[1], b[1]));
     static long U, C;
 
     public static void main(String[] args) throws IOException {
@@ -57,7 +57,7 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < K; i++) {
             int city = Integer.parseInt(st.nextToken());
-            pq.add(new Node(city, 0));
+            q.add(new long[]{city, 0});
             dist[city] = 0;
         }
 
@@ -75,19 +75,21 @@ public class Main {
     }
 
     static void djikstra() {
-        while (!pq.isEmpty()) {
-            Node cur = pq.poll();
+        while (!q.isEmpty()) {
+            long[] cur = q.poll();
+            int from = Math.toIntExact(cur[0]);
+            long cost = cur[1];
 
-            if (cur.cost > dist[cur.from]) {
+            if (cost > dist[from]) {
                 continue;
             }
 
-            for (Node nextNode : graph[cur.from]) {
-                long newCost = cur.cost + nextNode.cost;
+            for (Node nextNode : graph[from]) {
+                long newCost = cost + nextNode.cost;
 
                 if (newCost < dist[nextNode.from]) {
                     dist[nextNode.from] = newCost;
-                    pq.add(new Node(nextNode.from, newCost));
+                    q.add(new long[]{nextNode.from, newCost});
                 }
             }
 
