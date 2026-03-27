@@ -85,6 +85,10 @@ public class Main {
 			if (cur.cost > dist[cur.to]) {
 				continue;
 			}
+			
+			if(cur.to == E) {
+				return true;
+			}
 
 			for (Node nextNode : graph[cur.to]) {
 				
