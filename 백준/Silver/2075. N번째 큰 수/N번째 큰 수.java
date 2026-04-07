@@ -6,7 +6,7 @@ public class Main {
 	static StringTokenizer st;
 	static int N;
 	static int[][] arr;
-	static List<Integer> listArr = new ArrayList<Integer>();
+	static PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
 
 	public static void main(String[] args) throws Exception {
 
@@ -18,14 +18,18 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < N; j++) {
-//				arr[i][j] = Integer.parseInt(st.nextToken());
-				listArr.add(Integer.parseInt(st.nextToken()));
+				int num = Integer.parseInt(st.nextToken());
+
+				pq.offer(num);
+
+				if (pq.size() > N) {
+					pq.poll();
+				}
 			}
 		}
 
-		Collections.sort(listArr);
 
-		System.out.println(listArr.get((N * N) - N));
+		System.out.println(pq.poll());
 
 	}
 
